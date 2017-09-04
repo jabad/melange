@@ -76,6 +76,9 @@ class test_runner(unittest.TestCase):
         self.subscriber = None
 
     def test_asynchronus_eventbus(self):
+
+        a = Event.__subclasses__()
+
         self.ebus = EventBusFactory.create(subscribers_thread_safe=False)
 
         self.ebus.subscribe(self.subscriber)

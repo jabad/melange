@@ -11,7 +11,7 @@ class TestMessagePublisher:
 
         a_topic = 'a_topic'
         EventSerializer.instance().initialize({Event.event_type_name: EventSchema()})
-        event = Event(event_type_name=Event.event_type_name)
+        event = MagicMock(spec=Event)
 
         response = {'MessageId': '12345'}
 

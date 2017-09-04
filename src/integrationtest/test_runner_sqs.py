@@ -17,6 +17,7 @@ ebus = None
 
 NUM_EVENTS_TO_PUBLISH = 10
 
+
 class EventMineSchema(EventSchema):
     data = fields.Dict()
     id = fields.Integer()
@@ -30,7 +31,7 @@ class EventMine(Event):
     event_type_name = 'event_mine'
 
     def __init__(self, data, id):
-        Event.__init__(self, self.event_type_name)
+        Event.__init__(self)
         self.data = data
         self.id = id
 
@@ -66,7 +67,7 @@ class TestRunner(unittest.TestCase):
         print('Setting up')
         self.topic = 'dev-test-topic'
         self.events = [EventMine({'status': 'notprocessed'}, i) for i in range(NUM_EVENTS_TO_PUBLISH)]
-        EventSerializer.instance().initialize({EventMine.event_type_name: EventMineSchema()})
+
         EventBus.init(
             event_queue_name='dev-test-queue',
             topic_to_subscribe=self.topic)
@@ -90,11 +91,11 @@ class TestRunner(unittest.TestCase):
 
         processed_events = self.subscriber.get_processed_events()
 
-        return len(processed_events) == NUM_EVENTS_TO_PUBLISH and all(ev.get_status() == 'processed' for ev in processed_events)
+        assert len(processed_events) == NUM_EVENTS_TO_PUBLISH
+        assert all(ev.get_status() == 'processed' for ev in processed_events)
 
     def test_sqs_eventbus(self):
         success = self.alltests()
-        self.assertTrue(success)
 
 
 def interuppt_handler(signo, statck):
